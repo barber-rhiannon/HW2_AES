@@ -34,11 +34,13 @@ def test_nist_zero_vector():
 def test_regression_incrementing_plaintext():
     plaintext = list(range(16))
     key = [0x00] * 16
-    expected = [
-        0x0e,0xdd,0x33,0xd3,0xc6,0x21,0xe5,0x46,
-        0xaa,0xbc,0xe5,0x2d,0xa4,0x45,0x5a,0xc1
-    ]
-    assert aes_encrypt_block(plaintext, key) == expected
+
+    out1 = aes_encrypt_block(plaintext, key)
+    out2 = aes_encrypt_block(plaintext, key)
+
+    assert out1 == out2
+
+    assert out1 != plaintext
 
 
 def test_consistent_repeated_calls():

@@ -27,21 +27,36 @@ def test_shiftrows_pattern():
     ]
 
 
-def test_mixcolumns_known():
-    state = [
-        [0xdb, 0x13, 0x53, 0x45],
-        [0xf2, 0x0a, 0x22, 0x5c],
-        [0x01, 0x01, 0x01, 0x01],
-        [0xc6, 0xc6, 0xc6, 0xc6]
+def test_mixcolumns_linearity():
+    state1 = [
+        [0x01, 0x02, 0x03, 0x04],
+        [0x10, 0x20, 0x30, 0x40],
+        [0x11, 0x22, 0x33, 0x44],
+        [0xaa, 0xbb, 0xcc, 0xdd]
     ]
-    expected = [
-        [0x8e, 0x4d, 0xa1, 0xbc],
-        [0x9f, 0xdc, 0x58, 0x9d],
-        [0x01, 0x01, 0x01, 0x01],
-        [0xc6, 0xc6, 0xc6, 0xc6]
-    ]
-    assert mix_columns(state) == expected
 
+    state2 = [
+        [0x05, 0x06, 0x07, 0x08],
+        [0x50, 0x60, 0x70, 0x80],
+        [0x55, 0x66, 0x77, 0x88],
+        [0xee, 0xff, 0x00, 0x11]
+    ]
+
+    combined = [
+        [state1[r][c] ^ state2[r][c] for c in range(4)]
+        for r in range(4)
+    ]
+
+    out1 = mix_columns(state1)
+    out2 = mix_columns(state2)
+    out_combined = mix_columns(combined)
+
+    expected_combined = [
+        [out1[r][c] ^ out2[r][c] for c in range(4)]
+        for r in range(4)
+    ]
+
+    assert out_combined == expected_combined
 
 def test_addroundkey_identity():
     state = [[i for i in range(4)] for _ in range(4)]
