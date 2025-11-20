@@ -72,6 +72,7 @@ def mix_single_column(column):
     producing a new column based on finite field multiplication and XOR.
     '''
     a0, a1, a2, a3 = column
+
     return [
         galois_multiply(a0, 2) ^ galois_multiply(a1, 3) ^ a2 ^ a3,
         a0 ^ galois_multiply(a1, 2) ^ galois_multiply(a2, 3) ^ a3,
@@ -87,15 +88,10 @@ def mix_columns(state):
     '''
     mixed = [[0]*4 for _ in range(4)]
     for col in range(4):
-        a = [state[row][col] for row in range(4)]
-        mixed_column = [
-            galois_multiply(a[0], 2) ^ galois_multiply(a[1], 3) ^ a[2] ^ a[3],
-            a[0] ^ galois_multiply(a[1], 2) ^ galois_multiply(a[2], 3) ^ a[3],
-            a[0] ^ a[1] ^ galois_multiply(a[2], 2) ^ galois_multiply(a[3], 3),
-            galois_multiply(a[0], 3) ^ a[1] ^ a[2] ^ galois_multiply(a[3], 2)
-        ]
-        for row in range(4):
-            mixed[row][col] = mixed_column[row]
+        column = [state[r][col] for r in range(4)]
+        newcol = mix_single_column(column)
+        for r in range(4):
+            mixed[r][col] = newcol[r]
     return mixed
 
 
