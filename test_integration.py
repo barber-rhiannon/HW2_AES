@@ -1,4 +1,4 @@
-from aes import aes_encrypt_block
+from AES import aes_encrypt_block
 
 
 def test_nist_primary_vector():
