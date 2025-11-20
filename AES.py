@@ -86,11 +86,16 @@ def mix_columns(state):
     by invoking the column-level MixColumns function.
     '''
     mixed = [[0]*4 for _ in range(4)]
-    for col_idx in range(4):
-        column = [state[row][col_idx] for row in range(4)]
-        new_column = mix_single_column(column)
+    for col in range(4):
+        a = [state[row][col] for row in range(4)]
+        mixed_column = [
+            galois_multiply(a[0], 2) ^ galois_multiply(a[1], 3) ^ a[2] ^ a[3],
+            a[0] ^ galois_multiply(a[1], 2) ^ galois_multiply(a[2], 3) ^ a[3],
+            a[0] ^ a[1] ^ galois_multiply(a[2], 2) ^ galois_multiply(a[3], 3),
+            galois_multiply(a[0], 3) ^ a[1] ^ a[2] ^ galois_multiply(a[3], 2)
+        ]
         for row in range(4):
-            mixed[row][col_idx] = new_column[row]
+            mixed[row][col] = mixed_column[row]
     return mixed
 
 
